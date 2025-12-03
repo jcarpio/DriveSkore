@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DriveSkore - TFM Gamaliel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/black.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #141b3d;
+            --bg-accent: #1a2555;
+            --color-primary: #00d9ff;
+            --color-secondary: #7c3aed;
+            --color-accent: #f43f5e;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+        }
+
+        .reveal {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .reveal h1, .reveal h2, .reveal h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: none;
+            color: var(--text-primary);
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .reveal h1 {
+            font-size: 3.5em;
+            line-height: 1.1;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h2 {
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .reveal h3 {
+            font-size: 1.8em;
+            color: var(--color-primary);
+        }
+
+        .reveal p, .reveal li {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .reveal strong {
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .reveal em {
+            color: var(--color-accent);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .reveal code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-accent);
+            padding: 0.2em 0.5em;
+            border-radius: 4px;
+            color: var(--color-primary);
+        }
+
+        .reveal pre {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            border: 1px solid var(--bg-accent);
+        }
+
+        .reveal pre code {
+            padding: 1.5em;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            font-size: 0.75em;
+            line-height: 1.5;
+        }
+
+        /* Custom slide backgrounds */
+        .reveal .slide-background {
+            background: var(--bg-primary);
+        }
+
+        /* Title slide special styling */
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100vh;
+        }
+
+        .title-slide h1 {
+            font-size: 5em;
+            margin-bottom: 0.2em;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+            }
+            to {
+                text-shadow: 0 0 40px rgba(0, 217, 255, 0.8), 0 0 60px rgba(124, 58, 237, 0.6);
+            }
+        }
+
+        /* Impact numbers */
+        .big-number {
+            font-size: 5em;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            margin: 0.3em 0;
+            text-shadow: 0 0 40px rgba(244, 63, 94, 0.5);
+        }
+
+        /* Three column layout */
+        .three-cols {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2em;
+            margin: 2em 0;
+        }
+
+        .col-box {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-accent) 100%);
+            padding: 2em;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 217, 255, 0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .col-box:hover {
+            transform: translateY(-10px);
+            border-color: var(--color-primary);
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.3);
+        }
+
+        .col-box h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        /* Icon style */
+        .icon {
+            font-size: 3em;
+            margin-bottom: 0.3em;
+            display: block;
+        }
+
+        /* Checklist style */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 2em;
+            position: relative;
+            margin: 1em 0;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: 800;
+            font-size: 1.5em;
+        }
+
+        /* Architecture diagram */
+        .architecture-box {
+            background: var(--bg-secondary);
+            border: 2px solid var(--color-primary);
+            border-radius: 12px;
+            padding: 1.5em;
+            margin: 1em 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8em;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        /* Comparison table */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2em;
+            margin: 2em 0;
+        }
+
+        .comparison-item {
+            background: var(--bg-secondary);
+            padding: 2em;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-item:first-child {
+            border-color: var(--color-primary);
+        }
+
+        .comparison-item:last-child {
+            border-color: var(--color-success);
+        }
+
+        .comparison-item h4 {
+            margin-top: 0;
+            font-size: 1.8em;
+            color: var(--text-primary);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 3em;
+            margin: 2em 0;
+        }
+
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 0.75em;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1em 0;
+        }
+
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: -2.25em;
+            top: 1.5em;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 3px solid var(--bg-primary);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5em;
+            margin: 2em 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-accent));
+            padding: 1.5em;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: 800;
+            color: var(--color-primary);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            margin-top: 0.5em;
+        }
+
+        /* Quote style */
+        .quote {
+            font-size: 2em;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            margin: 1em 0;
+            padding: 1em;
+            border-left: 4px solid var(--color-primary);
+            background: linear-gradient(90deg, rgba(0, 217, 255, 0.1), transparent);
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            padding: 1em 3em;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            font-size: 1.3em;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            margin: 1em;
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 60px rgba(0, 217, 255, 0.6);
+        }
+
+        /* Progress bar for roadmap */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-accent);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1em 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            animation: progressFill 2s ease-out;
+        }
+
+        @keyframes progressFill {
+            from { width: 0; }
+        }
+
+        /* Logo placeholder */
+        .logo {
+            width: 200px;
+            height: 200px;
+            margin: 2em auto;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 20px 60px rgba(0, 217, 255, 0.4);
+        }
+
+        /* Footer info */
+        .footer-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 0.7em;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .reveal h1 { font-size: 2.5em; }
+            .reveal h2 { font-size: 1.8em; }
+            .three-cols { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .comparison { grid-template-columns: 1fr; }
+        }
+
+        /* Fragment animations */
+        .reveal .fragment.fade-in-then-semi-out {
+            opacity: 1;
+        }
+        
+        .reveal .fragment.fade-in-then-semi-out.visible {
+            opacity: 1;
+        }
+        
+        .reveal .fragment.fade-in-then-semi-out.current-fragment {
+            opacity: 1;
+        }
+
+        /* Custom slide numbers */
+        .reveal .slide-number {
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--color-primary);
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 8px;
+            padding: 0.3em 0.6em;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- SLIDE 1: TÍTULO -->
+            <section class="title-slide">
+                <div class="logo">DS</div>
+                <h1>DriveSkore</h1>
+                <h3>Evaluación Universal de Conducción</h3>
+                <p style="margin-top: 2em; font-size: 1em; color: var(--text-muted);">
+                    Trabajo Fin de Máster en Informática<br>
+                    Universidad de Huelva<br>
+                    <strong style="color: var(--color-primary);">Gamaliel [Apellido]</strong>
+                </p>
+            </section>
+
+            <!-- SLIDE 2: EL PROBLEMA -->
+            <section>
+                <h2>1.3 Millones de Razones</h2>
+                <div class="big-number">1,300,000</div>
+                <p style="font-size: 1.5em;">muertes en accidentes de tráfico cada año</p>
+                <div class="fragment" style="margin-top: 1.5em;">
+                    <p class="big-number" style="font-size: 3em;">50M+</p>
+                    <p style="font-size: 1.3em;">personas heridas anualmente</p>
+                </div>
+                <div class="fragment" style="margin-top: 2em;">
+                    <p style="font-size: 1.8em; color: var(--color-primary);">
+                        ¿Cómo sabemos si conducimos bien?
+                    </p>
+                </div>
+                <aside class="notes">
+                    La mayoría de conductores creen que conducen por encima de la media. 
+                    Es estadísticamente imposible. No tenemos feedback objetivo sobre nuestra 
+                    conducción hasta que... es demasiado tarde.
+                </aside>
+            </section>
+
+            <!-- SLIDE 3: LA SOLUCIÓN -->
+            <section>
+                <h2>DriveSkore</h2>
+                <h3>Evaluación Universal de Conducción</h3>
+                
+                <div class="three-cols" style="margin-top: 2em;">
+                    <div class="col-box fragment">
+                        <span class="icon">🎯</span>
+                        <h3>MISIÓN</h3>
+                        <p>Ayudar a millones de personas a conducir mejor</p>
+                    </div>
+                    
+                    <div class="col-box fragment" style="animation-delay: 0.2s;">
+                        <span class="icon">🎨</span>
+                        <h3>FILOSOFÍA</h3>
+                        <p>Simplicidad que no interfiere con la seguridad</p>
+                    </div>
+                    
+                    <div class="col-box fragment" style="animation-delay: 0.4s;">
+                        <span class="icon">🌍</span>
+                        <h3>ALCANCE</h3>
+                        <p>Producto real, listo para impactar globalmente</p>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 2em; font-size: 1.3em; color: var(--text-secondary);">
+                    Democratizando la evaluación de conducción profesional
+                </p>
+                
+                <aside class="notes">
+                    DriveSkore democratiza la evaluación de conducción. Lo que antes solo estaba 
+                    disponible para profesionales, ahora en el bolsillo de cualquier conductor.
+                </aside>
+            </section>
+
+            <!-- SLIDE 4: DEMO INTRO -->
+            <section>
+                <h2>Tan Simple Como...</h2>
+                
+                <div style="display: flex; align-items: center; justify-content: center; gap: 3em; margin: 3em 0; font-size: 1.5em;">
+                    <div class="fragment">
+                        <span class="icon">📱</span>
+                        <p>1. Abrir app</p>
+                    </div>
+                    
+                    <span style="font-size: 2em; color: var(--color-primary);">→</span>
+                    
+                    <div class="fragment">
+                        <span class="icon">▶️</span>
+                        <p>2. Pulsar "Iniciar"</p>
+                    </div>
+                    
+                    <span style="font-size: 2em; color: var(--color-primary);">→</span>
+                    
+                    <div class="fragment">
+                        <span class="icon">🚗</span>
+                        <p>3. Conducir</p>
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 3em;">
+                    <div class="quote" style="font-size: 1.5em;">
+                        Un solo botón entre tú y una conducción más segura
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 2em; font-size: 1.3em; color: var(--color-accent);">
+                    <strong>→ DEMO EN VIVO ←</strong>
+                </p>
+                
+                <aside class="notes">
+                    Permítanme mostrarles cómo funciona en tiempo real...
+                    [Realizar la demo aquí mostrando: inicio sesión, selección ruta, conducción con datos en tiempo real, resultados]
+                </aside>
+            </section>
+
+            <!-- SLIDE 5: METODOLOGÍA -->
+            <section>
+                <h2>De la Teoría a la Carretera</h2>
+                <h3>Enfoque Ágil + Testeo Real</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item fragment">
+                        <strong style="color: var(--color-primary);">Fase 1: Investigación</strong> (2 semanas)
+                        <p>Análisis apps existentes · Pain points · Definición arquitectura</p>
+                    </div>
+                    
+                    <div class="timeline-item fragment">
+                        <strong style="color: var(--color-primary);">Fase 2: MVP</strong> (3 semanas)
+                        <p>Desarrollo core Android · Algoritmos de evaluación · Primera versión funcional</p>
+                    </div>
+                    
+                    <div class="timeline-item fragment">
+                        <strong style="color: var(--color-accent);">Fase 3: Testing Campus UHU</strong> (4 semanas)
+                        <p>15+ usuarios reales · Rutas diarias · Feedback continuo e iteración</p>
+                    </div>
+                    
+                    <div class="timeline-item fragment">
+                        <strong style="color: var(--color-success);">Fase 4: Expansión iOS + Producción</strong> (3 semanas)
+                        <p>Desarrollo iOS nativo · Infraestructura escalable · Landing + analytics</p>
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em;">
+                    <div class="quote" style="font-size: 1.3em;">
+                        No es un prototipo académico. Son 12 semanas de ingeniería con usuarios reales en condiciones reales.
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Explicar que cada fase tuvo objetivos claros y entregables medibles.
+                    El testing real fue crítico para validar no solo la tecnología sino la UX.
+                </aside>
+            </section>
+
+            <!-- SLIDE 6: ARQUITECTURA -->
+            <section>
+                <h2>Infraestructura Production-Ready</h2>
+                
+                <div class="architecture-box fragment">
+                    <div style="color: var(--color-primary); font-weight: 600; margin-bottom: 0.5em;">┌─ FRONTEND MULTIPLATAFORMA ─┐</div>
+                    <div>│  React Native + Expo</div>
+                    <div>│  ├── iOS (Swift interop)</div>
+                    <div>│  │   ├── Widgets interactivos</div>
+                    <div>│  │   └── Siri Shortcuts</div>
+                    <div>│  └── Android (Kotlin interop)</div>
+                    <div>│      └── Floating overlay</div>
+                    <div style="color: var(--color-primary); font-weight: 600;">└─────────────────────────────┘</div>
+                </div>
+                
+                <div style="text-align: center; margin: 1em 0; font-size: 2em; color: var(--color-primary);">↕ REST API</div>
+                
+                <div class="architecture-box fragment">
+                    <div style="color: var(--color-secondary); font-weight: 600; margin-bottom: 0.5em;">┌─ BACKEND SERVERLESS ─┐</div>
+                    <div>│  Vercel Edge Functions</div>
+                    <div>│  └── Deploy automático GitHub</div>
+                    <div>│</div>
+                    <div>│  Supabase</div>
+                    <div>│  ├── PostgreSQL</div>
+                    <div>│  ├── Auth</div>
+                    <div>│  └── Real-time subscriptions</div>
+                    <div style="color: var(--color-secondary); font-weight: 600;">└───────────────────────┘</div>
+                </div>
+
+                <div class="three-cols fragment" style="margin-top: 2em; font-size: 0.9em;">
+                    <div class="col-box">
+                        <strong style="color: var(--color-success);">Escalabilidad</strong>
+                        <p>Serverless → costes marginales bajos</p>
+                    </div>
+                    <div class="col-box">
+                        <strong style="color: var(--color-success);">Stack Moderno</strong>
+                        <p>Probado en producción por miles de apps</p>
+                    </div>
+                    <div class="col-box">
+                        <strong style="color: var(--color-success);">Open Source</strong>
+                        <p>Herramientas de código abierto</p>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Explicar: Serverless escala automáticamente. Free tier aguanta primeros 1000 usuarios.
+                    Stack moderno permite iterar rápido. Open source da flexibilidad y transparencia.
+                </aside>
+            </section>
+
+            <!-- SLIDE 7: UNIVERSALIDAD -->
+            <section>
+                <h2>Universalidad Real</h2>
+                <h3>Dos Plataformas, Una Visión</h3>
+                
+                <div class="comparison">
+                    <div class="comparison-item fragment">
+                        <h4>🍎 iOS</h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>✓ Widget Interactivo</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">Pantalla de bloqueo</li>
+                            <li style="margin-top: 1em;">✓ Siri Shortcuts</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">"Hey Siri, empieza DriveSkore"</li>
+                            <li style="margin-top: 1em;">✓ Live Activities</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">Dynamic Island integration</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-item fragment">
+                        <h4>🤖 Android</h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>✓ Floating Overlay</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">Sobre otras apps</li>
+                            <li style="margin-top: 1em;">✓ Quick Settings Tile</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">Acceso rápido desde panel</li>
+                            <li style="margin-top: 1em;">✓ Persistent Notification</li>
+                            <li style="color: var(--text-muted); font-size: 0.9em;">Control continuo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em;">
+                    <div class="quote" style="font-size: 1.3em;">
+                        No es un 'port'. Es adaptación inteligente a los paradigmas nativos de cada plataforma.
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 1.5em; color: var(--text-secondary);">
+                    <strong>Complejidad técnica:</strong> Bridges nativos (Swift/Kotlin ↔ JavaScript) · 
+                    Testing en dispositivos reales · UX consistente con código divergente
+                </p>
+                
+                <aside class="notes">
+                    iOS no permite overlays por seguridad → widgets interactivos.
+                    Android lo permite → aprovechamos floating overlay.
+                    Mismo objetivo, implementación específica óptima.
+                </aside>
+            </section>
+
+            <!-- SLIDE 8: IA -->
+            <section>
+                <h2>IA como Acelerador</h2>
+                
+                <div style="margin: 2em 0;">
+                    <div style="display: flex; align-items: center; gap: 2em; margin-bottom: 1em;">
+                        <span style="flex: 1; color: var(--text-muted);">Desarrollo Tradicional:</span>
+                        <div style="flex: 3; background: var(--bg-accent); height: 40px; border-radius: 8px; position: relative;">
+                            <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-primary); font-weight: 600;">16 semanas</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 2em;" class="fragment">
+                        <span style="flex: 1; color: var(--color-primary); font-weight: 600;">Desarrollo con IA:</span>
+                        <div style="flex: 3; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); height: 40px; border-radius: 8px; position: relative; width: 75%;">
+                            <div style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: white; font-weight: 600;">12 semanas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="fragment" style="text-align: center; margin-top: 1em;">
+                        <span style="font-size: 2em; color: var(--color-success); font-weight: 800;">25% ahorro</span>
+                    </div>
+                </div>
+
+                <div class="three-cols fragment" style="margin-top: 2em; font-size: 0.85em;">
+                    <div class="col-box">
+                        <strong style="color: var(--color-primary);">Generación Componentes</strong>
+                        <p style="margin-top: 0.5em; font-size: 0.9em;">300 líneas base en 2 min → refinamiento 30 min</p>
+                    </div>
+                    
+                    <div class="col-box">
+                        <strong style="color: var(--color-primary);">Debugging Asistido</strong>
+                        <p style="margin-top: 0.5em; font-size: 0.9em;">Race condition identificada en 3 intentos</p>
+                    </div>
+                    
+                    <div class="col-box">
+                        <strong style="color: var(--color-primary);">Optimización Queries</strong>
+                        <p style="margin-top: 0.5em; font-size: 0.9em;">3s → 0.3s (10x mejora)</p>
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em;">
+                    <div class="quote" style="font-size: 1.2em;">
+                        La IA no reemplaza al ingeniero. Lo libera para enfocarse en decisiones de alto nivel.
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Sin IA, este proyecto habría sido solo Android o solo iOS. 
+                    Con IA, tengo ambos con calidad production.
+                </aside>
+            </section>
+
+            <!-- SLIDE 9: LANZAMIENTO PROFESIONAL -->
+            <section>
+                <h2>Más Allá del Prototipo</h2>
+                <h3>Infraestructura Completa</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2em; margin-top: 2em;">
+                    <ul class="checklist fragment">
+                        <li><strong>RGPD Compliance</strong><br>
+                        <span style="font-size: 0.85em; color: var(--text-muted);">Consentimiento · Derecho al olvido · Datos anonimizados</span></li>
+                        
+                        <li><strong>Presencia Web</strong><br>
+                        <span style="font-size: 0.85em; color: var(--text-muted);">driveskore.org · Responsive · SEO</span></li>
+                    </ul>
+                    
+                    <ul class="checklist fragment">
+                        <li><strong>Distribution Channels</strong><br>
+                        <span style="font-size: 0.85em; color: var(--text-muted);">TestFlight · Play Internal Testing</span></li>
+                        
+                        <li><strong>Observabilidad</strong><br>
+                        <span style="font-size: 0.85em; color: var(--text-muted);">Firebase Analytics · Error tracking</span></li>
+                    </ul>
+                </div>
+
+                <div class="architecture-box fragment" style="margin-top: 2em; text-align: center;">
+                    <strong style="color: var(--color-success); font-size: 1.2em;">CI/CD Automatizado</strong>
+                    <div style="margin-top: 1em;">
+                        git push → GitHub Actions → Tests → Build → Deploy (Vercel &lt; 1 min)
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em;">
+                    <div class="quote" style="font-size: 1.2em;">
+                        Un estudiante puede hacer un prototipo.<br>
+                        Un ingeniero construye un producto.<br>
+                        <span style="color: var(--color-accent);">DriveSkore es un producto.</span>
+                    </div>
+                </div>
+                
+                <aside class="notes">
+                    Cada uno de estos elementos requirió investigación, implementación y testing.
+                    RGPD desde diseño, no como afterthought. CI/CD permite iterar rápido y seguro.
+                </aside>
+            </section>
+
+            <!-- SLIDE 10: RETOS -->
+            <section>
+                <h2>Complejidad Técnica Superada</h2>
+                
+                <div class="three-cols" style="font-size: 0.9em;">
+                    <div class="col-box fragment">
+                        <span class="icon">🔧</span>
+                        <h3>TÉCNICO</h3>
+                        <p><strong>Sincronización multi-sensor en tiempo real</strong></p>
+                        <ul style="text-align: left; font-size: 0.85em; margin-top: 1em;">
+                            <li>GPS accuracy</li>
+                            <li>Acelerómetro</li>
+                            <li>Giroscopio</li>
+                            <li>Fusión datos 50Hz</li>
+                        </ul>
+                        <p style="margin-top: 1em; color: var(--color-accent); font-size: 0.9em;">
+                            <strong>Reto:</strong> Precisión bajo condiciones variables (túneles, etc.)
+                        </p>
+                    </div>
+                    
+                    <div class="col-box fragment">
+                        <span class="icon">📱</span>
+                        <h3>PLATAFORMA</h3>
+                        <p><strong>Soluciones nativas sin comprometer UX</strong></p>
+                        <ul style="text-align: left; font-size: 0.85em; margin-top: 1em;">
+                            <li>iOS widgets</li>
+                            <li>Android overlay</li>
+                            <li>Bridges nativos</li>
+                            <li>Code sharing max</li>
+                        </ul>
+                        <p style="margin-top: 1em; color: var(--color-accent); font-size: 0.9em;">
+                            <strong>Reto:</strong> Una codebase para dos mundos diferentes
+                        </p>
+                    </div>
+                    
+                    <div class="col-box fragment">
+                        <span class="icon">🚀</span>
+                        <h3>PRODUCTO</h3>
+                        <p><strong>De concepto a usuarios reales en 12 semanas</strong></p>
+                        <ul style="text-align: left; font-size: 0.85em; margin-top: 1em;">
+                            <li>Testing real campus</li>
+                            <li>Feedback continuo</li>
+                            <li>Iteración ágil</li>
+                            <li>Quality assurance</li>
+                        </ul>
+                        <p style="margin-top: 1em; color: var(--color-accent); font-size: 0.9em;">
+                            <strong>Reto:</strong> Calidad production con timeline académico
+                        </p>
+                    </div>
+                </div>
+
+                <p class="fragment" style="margin-top: 2em; font-size: 1.1em; color: var(--text-secondary);">
+                    <strong style="color: var(--color-primary);">Solución técnica destacada:</strong> 
+                    Filtro de Kalman para fusionar múltiples fuentes → precisión submétrica
+                </p>
+                
+                <aside class="notes">
+                    Técnico: Los sensores móviles no son perfectos. GPS error 5-10m. 
+                    Implementé filtro Kalman para fusión.
+                    
+                    Plataforma: React Native da 80%. El 20% requiere código nativo. 
+                    Bridges Swift/Kotlin manteniendo arquitectura compartida.
+                    
+                    Producto: Conseguir usuarios reales, feedback honesto, iterar rápido 
+                    es tan difícil como el código.
+                </aside>
+            </section>
+
+            <!-- SLIDE 11: IMPACTO -->
+            <section>
+                <h2>Del Campus al Mundo</h2>
+                
+                <div class="stats-grid fragment">
+                    <div class="stat-box">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Usuarios activos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Viajes evaluados</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">1.5K</div>
+                        <div class="stat-label">km analizados</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">4.6/5</div>
+                        <div class="stat-label">Rating promedio</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3em;">
+                    <h3 style="color: var(--color-primary); margin-bottom: 1em;">Roadmap de Crecimiento</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5em; font-size: 0.9em;">
+                        <div class="fragment" style="background: var(--bg-secondary); padding: 1.5em; border-radius: 12px; border-left: 4px solid var(--color-primary);">
+                            <strong style="color: var(--color-primary);">Q1 2025: Local Expansion</strong>
+                            <p style="margin-top: 0.5em;">Huelva/Sevilla · Autoescuelas · 500 usuarios</p>
+                        </div>
+                        
+                        <div class="fragment" style="background: var(--bg-secondary); padding: 1.5em; border-radius: 12px; border-left: 4px solid var(--color-secondary);">
+                            <strong style="color: var(--color-secondary);">Q2 2025: Gamificación</strong>
+                            <p style="margin-top: 0.5em;">Logros · Leaderboards · Social features</p>
+                        </div>
+                        
+                        <div class="fragment" style="background: var(--bg-secondary); padding: 1.5em; border-radius: 12px; border-left: 4px solid var(--color-success);">
+                            <strong style="color: var(--color-success);">Q3 2025: Monetización</strong>
+                            <p style="margin-top: 0.5em;">Freemium · Aseguradoras · B2B flotas</p>
+                        </div>
+                        
+                        <div class="fragment" style="background: var(--bg-secondary); padding: 1.5em; border-radius: 12px; border-left: 4px solid var(--color-accent);">
+                            <strong style="color: var(--color-accent);">Q4 2025: Internacional</strong>
+                            <p style="margin-top: 0.5em;">Multi-idioma · 3 países · 10K usuarios</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em; padding: 1.5em; background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(124, 58, 237, 0.1)); border-radius: 12px;">
+                    <p style="font-size: 1.1em;"><strong style="color: var(--color-primary);">Potencial global:</strong></p>
+                    <p style="margin-top: 0.5em;">1,400M conductores × 0.1% captura = <strong style="color: var(--color-accent);">1.4M usuarios</strong></p>
+                    <p style="margin-top: 0.3em;">$2/usuario/mes = <strong style="color: var(--color-success);">$33.6M ARR potencial</strong></p>
+                </div>
+                
+                <aside class="notes">
+                    La infraestructura está lista. La tecnología funciona. 
+                    El producto existe. Ahora toca escalar.
+                </aside>
+            </section>
+
+            <!-- SLIDE 12: CIERRE -->
+            <section class="title-slide">
+                <h2 style="font-size: 2.5em; margin-bottom: 0.5em;">Salvando Vidas</h2>
+                <h3 style="font-size: 1.8em; color: var(--text-secondary);">Un Conductor a la Vez</h3>
+                
+                <div class="quote fragment" style="margin: 2em auto; max-width: 800px;">
+                    1.3 millones de muertes al año.<br>
+                    No podemos prevenir todas.<br><br>
+                    Pero si DriveSkore ayuda a evitar <span style="color: var(--color-accent); font-weight: 800;">UNA</span>,<br>
+                    ya habrá valido la pena.
+                </div>
+
+                <div class="fragment" style="margin-top: 3em;">
+                    <a href="https://driveskore.org" class="cta-button">🌐 driveskore.org</a>
+                </div>
+
+                <div class="fragment" style="margin-top: 2em; font-size: 1.1em; color: var(--text-muted);">
+                    <p>📱 TestFlight · Play Store</p>
+                    <p>💬 gamaliel@driveskore.org</p>
+                </div>
+
+                <h2 class="fragment" style="margin-top: 2em; font-size: 2em; color: var(--color-primary);">
+                    ¿Preguntas?
+                </h2>
+                
+                <aside class="notes">
+                    DriveSkore comenzó como mi Trabajo Fin de Máster. 
+                    Pero no termina aquí. Es una herramienta que puede cambiar cómo el mundo conduce. 
+                    Y está lista para hacerlo. Gracias.
+                </aside>
+            </section>
+
+        </div>
+    </div>
+
+    <div class="footer-info">
+        TFM - Máster en Informática - UHU
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            showSlideNumber: 'all',
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
+            
+            // Control and navigation
+            controls: true,
+            progress: true,
+            center: true,
+            touch: true,
+            loop: false,
+            rtl: false,
+            navigationMode: 'default',
+            
+            // Presentation size
+            width: 1920,
+            height: 1080,
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            // Plugins
+            plugins: [ RevealNotes, RevealHighlight ],
+            
+            // Keyboard shortcuts
+            keyboard: {
+                13: 'next', // Enter
+                32: 'next', // Space
+            },
+        });
+
+        // Custom animations on slide change
+        Reveal.on('slidechanged', event => {
+            // Reset animations
+            const fragments = event.currentSlide.querySelectorAll('.fragment');
+            fragments.forEach(fragment => {
+                fragment.classList.remove('visible');
+            });
+        });
+
+        // Add slide entry animations
+        Reveal.on('ready', event => {
+            console.log('Presentación DriveSkore lista. ¡Éxito en la defensa! 🚀');
+        });
+    </script>
+</body>
+</html>
